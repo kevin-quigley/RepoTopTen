@@ -3,134 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitHub Top Contributors</title>
+    <title>RepoTopTen</title>
     <style>
         body {
-    font-family: Arial, sans-serif;
-    background-color: #f8f8f8;
-    margin: 0;
-    padding: 0;
-}
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
 
-.container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-}
+        h1 {
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 20px;
+        }
 
-h1 {
-    font-size: 36px;
-    color: #333;
-    margin-bottom: 20px;
-}
+        p {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 10px;
+        }
 
-p {
-    font-size: 18px;
-    color: #666;
-    margin-bottom: 10px;
-}
+        input[type="text"] {
+            width: calc(100% - 10px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
 
-input[type="text"] {
-    width: calc(100% - 10px);
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
 
-button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
+        button:hover {
+            background-color: #0056b3;
+        }
 
-button:hover {
-    background-color: #0056b3;
-}
+        #results {
+            margin-top: 20px;
+            text-align: left;
+        }
 
-#results {
-    margin-top: 20px;
-}
+        ol {
+            list-style: none;
+            padding: 0;
+        }
 
-ol {
-    list-style: none;
-    padding: 0;
-}
-
-ol li {
-    margin-bottom: 10px;
-}
+        ol li {
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
-    <h1>GitHub Top Contributors</h1>
+    <h1>RepoTopTen</h1>
     <p>Enter GitHub repository URLs:</p>
     <input type="text" id="repoInput" placeholder="https://github.com/owner/repo">
     <button onclick="fetchTopContributors()">Get Top Contributors</button>
     <div id="results"></div>
     <script>
-    function fetchTopContributors() {
-        var repoUrls = document.getElementById("repoInput").value.trim();
-        if (!repoUrls) {
-            alert("Please enter GitHub repository URLs.");
-            return;
-        }
-
-        // Split repository URLs by comma and trim whitespace from each URL
-        var repoUrlList = repoUrls.split(",").map(url => url.trim());
-
-        // Construct the base URL for the AJAX request
-        var baseUrl = "https://api.github.com/repos/";
-
-        // Iterate over each repository URL and send AJAX request for each
-        repoUrlList.forEach(repoUrl => {
-            // Extract owner and repo name from the repository URL
-            var match = repoUrl.match(/github\.com\/([^\/]+)\/([^\/]+)/);
-            if (!match) {
-                alert("Invalid GitHub repository URL: " + repoUrl);
+        function fetchTopContributors() {
+            var repoUrls = document.getElementById("repoInput").value.trim();
+            if (!repoUrls) {
+                alert("Please enter GitHub repository URLs.");
                 return;
             }
-            var owner = match[1];
-            var repo = match[2];
 
-            // Construct the full URL for the AJAX request
-            var fullUrl = baseUrl + owner + "/" + repo + "/contributors";
+            // Split repository URLs by comma and trim whitespace from each URL
+            var repoUrlList = repoUrls.split(",").map(url => url.trim());
 
-            // Send AJAX request to GitHub API
-            var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        // Parse response JSON and display top contributors
-                        var contributors = JSON.parse(xhr.responseText);
-                        showTopContributors(repoUrl, contributors);
-                    } else {
-                        alert("Error: " + xhr.statusText);
-                    }
+            // Construct the base URL for the AJAX request
+            var baseUrl = "https://api.github.com/repos/";
+
+            // Iterate over each repository URL and send AJAX request for each
+            repoUrlList.forEach(repoUrl => {
+                // Extract owner and repo name from the repository URL
+                var match = repoUrl.match(/github\.com\/([^\/]+)\/([^\/]+)/);
+                if (!match) {
+                    alert("Invalid GitHub repository URL: " + repoUrl);
+                    return;
                 }
-            };
-            xhr.open("GET", fullUrl, true);
-            xhr.send();
-        });
-    }
+                var owner = match[1];
+                var repo = match[2];
 
-    function showTopContributors(repoUrl, contributors) {
-        // Display top contributors for the repository
-        var resultsDiv = document.getElementById("results");
-        resultsDiv.innerHTML += "<h2>" + repoUrl + "</h2>";
-        resultsDiv.innerHTML += "<ol>";
-        contributors.slice(0, 10).forEach(function(contributor, index) {
-            resultsDiv.innerHTML += "<li>" + contributor.login + ": " + contributor.contributions + " contributions</li>";
-        });
-        resultsDiv.innerHTML += "</ol>";
-    }
-</script>
+                // Construct the full URL for the AJAX request
+                var fullUrl = baseUrl + owner + "/" + repo + "/contributors";
+
+                // Send AJAX request to GitHub API
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        if (xhr.status === 200) {
+                            // Parse response JSON and display top contributors
+                            var contributors = JSON.parse(xhr.responseText);
+                            showTopContributors(repoUrl, contributors);
+                        } else {
+                            alert("Error: " + xhr.statusText);
+                        }
+                    }
+                };
+                xhr.open("GET", fullUrl, true);
+                xhr.send();
+            });
+        }
+
+        function showTopContributors(repoUrl, contributors) {
+            // Display top contributors for the repository
+            var resultsDiv = document.getElementById("results");
+            resultsDiv.innerHTML += "<h2>" + repoUrl + "</h2>";
+            resultsDiv.innerHTML += "<ol>";
+            contributors.slice(0, 10).forEach(function(contributor, index) {
+                resultsDiv.innerHTML += "<li>" + contributor.login + ": " + contributor.contributions + " contributions</li>";
+            });
+            resultsDiv.innerHTML += "</ol>";
+        }
+    </script>
 </body>
 </html>
-
-
-
