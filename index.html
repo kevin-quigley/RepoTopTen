@@ -73,13 +73,17 @@
             color: #007bff;
             text-decoration: none;
         }
+
+        .repo-url {
+            margin-top: 10px; /* Add space between repository URLs */
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>RepoTopTen</h1>
         <p>Enter GitHub repository URLs:</p>
-        <input type="text" id="repoInput" placeholder="https://github.com/owner/repo, https://github.com/owner..." onkeydown="if (event.key === 'Enter') fetchTopContributors()">
+        <input type="text" id="repoInput" placeholder="https://github.com/owner/repo">
         <button onclick="fetchTopContributors()">Get Top Contributors</button>
         <div id="results"></div>
     </div>
@@ -133,17 +137,20 @@
         function showTopContributors(repoUrl, contributors) {
             // Display top contributors for the repository
             var resultsDiv = document.getElementById("results");
-            var repoLink = document.createElement("a");
-            repoLink.href = repoUrl;
-            repoLink.target = "_blank"; // Open link in new window
-            repoLink.textContent = repoUrl;
-            resultsDiv.appendChild(repoLink);
+            resultsDiv.innerHTML += "<h2>" + repoUrl + "</h2>";
             resultsDiv.innerHTML += "<ol>";
             contributors.slice(0, 10).forEach(function(contributor, index) {
-                resultsDiv.innerHTML += "<li>" + (index + 1) + ". <a href='https://github.com/" + contributor.login + "' target='_blank'>" + contributor.login + "</a>: " + contributor.contributions + " contributions</li>";
+                resultsDiv.innerHTML += "<li>" + (index + 1) + ". " + contributor.login + ": " + contributor.contributions + " contributions</li>";
             });
             resultsDiv.innerHTML += "</ol>";
         }
+
+        // Allow users to press Enter to run the program
+        document.getElementById("repoInput").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                fetchTopContributors();
+            }
+        });
     </script>
 </body>
 </html>
