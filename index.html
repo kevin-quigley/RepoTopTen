@@ -11,34 +11,29 @@
             margin: 0;
             padding: 0;
         }
-
         .container {
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
-            text-align: center;
+            text-align: center; /* Center align content */
         }
-
         h1 {
             font-size: 36px;
             color: #333;
             margin-bottom: 20px;
         }
-
         p {
             font-size: 18px;
             color: #666;
             margin-bottom: 10px;
         }
-
         input[type="text"] {
-            width: calc(100% - 100px);
+            width: calc(100% - 100px); /* Adjust input width */
             padding: 10px;
             margin-bottom: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
-
         button {
             padding: 10px 20px;
             background-color: #007bff;
@@ -48,34 +43,25 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
-
         button:hover {
             background-color: #0056b3;
         }
-
         #results {
             margin-top: 20px;
-            text-align: left;
+            text-align: left; /* Align text to left */
         }
-
         ol {
             list-style: none;
             padding: 0;
-            margin: 10px 0;
+            margin: 10px 0; /* Adjust margin between repositories */
         }
-
         ol li {
             margin-bottom: 10px;
-            font-size: 16px;
+            font-size: 16px; /* Decrease font size */
         }
-
         ol li a {
             color: #007bff;
             text-decoration: none;
-        }
-
-        .repo-url {
-            margin-top: 10px;
         }
     </style>
 </head>
@@ -83,11 +69,10 @@
     <div class="container">
         <h1>RepoTopTen</h1>
         <p>Enter GitHub repository URLs:</p>
-        <input type="text" id="repoInput" placeholder="https://github.com/owner/repo, https://github.com/owner...">
+        <input type="text" id="repoInput" placeholder="https://github.com/owner/repo" onkeydown="if (event.key === 'Enter') fetchTopContributors()">
         <button onclick="fetchTopContributors()">Get Top Contributors</button>
         <div id="results"></div>
     </div>
-
     <script>
         function fetchTopContributors() {
             var repoUrls = document.getElementById("repoInput").value.trim();
@@ -95,13 +80,10 @@
                 alert("Please enter GitHub repository URLs.");
                 return;
             }
-
             // Split repository URLs by comma and trim whitespace from each URL
             var repoUrlList = repoUrls.split(",").map(url => url.trim());
-
             // Construct the base URL for the AJAX request
             var baseUrl = "https://api.github.com/repos/";
-
             // Iterate over each repository URL and send AJAX request for each
             repoUrlList.forEach(repoUrl => {
                 // Extract owner and repo name from the repository URL
@@ -112,10 +94,8 @@
                 }
                 var owner = match[1];
                 var repo = match[2];
-
                 // Construct the full URL for the AJAX request
                 var fullUrl = baseUrl + owner + "/" + repo + "/contributors";
-
                 // Send AJAX request to GitHub API
                 var xhr = new XMLHttpRequest();
                 xhr.onreadystatechange = function() {
@@ -133,19 +113,20 @@
                 xhr.send();
             });
         }
-
         function showTopContributors(repoUrl, contributors) {
             // Display top contributors for the repository
             var resultsDiv = document.getElementById("results");
-            resultsDiv.innerHTML += "<h2>" + repoUrl + "</h2>";
+            var repoLink = document.createElement("a");
+            repoLink.href = repoUrl;
+            repoLink.target = "_blank"; // Open link in new window
+            repoLink.textContent = repoUrl;
+            resultsDiv.appendChild(repoLink);
             resultsDiv.innerHTML += "<ol>";
             contributors.slice(0, 10).forEach(function(contributor, index) {
-                resultsDiv.innerHTML += "<li>" + (index + 1) + ". <a href='" + repoUrl + "' target='_blank'>" + contributor.login + "</a>: " + contributor.contributions + " contributions</li>";
+                resultsDiv.innerHTML += "<li>" + (index + 1) + ". <a href='https://github.com/" + contributor.login + "' target='_blank'>" + contributor.login + "</a>: " + contributor.contributions + " contributions</li>";
             });
             resultsDiv.innerHTML += "</ol>";
         }
-
-        // Allow users to press Enter to run the program
-        document.getElementById("repoInput").addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                fetchTopContributors();
+    </script>
+</body>
+</html>
