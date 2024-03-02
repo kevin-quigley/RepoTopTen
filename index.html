@@ -14,29 +14,65 @@
     <input type="text" id="repoInput" placeholder="https://github.com/owner/repo">
     <button onclick="fetchTopContributors()">Get Top Contributors</button>
     <div id="results"></div>
-
     <script>
-        function fetchTopContributors() {
-            var repoUrl = document.getElementById("repoInput").value.trim();
-            if (!repoUrl) {
-                alert("Please enter a valid GitHub repository URL.");
+    function fetchTopContributors() {
+        var repoUrls = document.getElementById("repoInput").value.trim();
+        if (!repoUrls) {
+            alert("Please enter GitHub repository URLs.");
+            return;
+        }
+
+        // Split repository URLs by comma and trim whitespace from each URL
+        var repoUrlList = repoUrls.split(",").map(url => url.trim());
+
+        // Construct the base URL for the AJAX request
+        var baseUrl = "https://api.github.com/repos/";
+
+        // Iterate over each repository URL and send AJAX request for each
+        repoUrlList.forEach(repoUrl => {
+            // Extract owner and repo name from the repository URL
+            var match = repoUrl.match(/github\.com\/([^\/]+)\/([^\/]+)/);
+            if (!match) {
+                alert("Invalid GitHub repository URL: " + repoUrl);
                 return;
             }
+            var owner = match[1];
+            var repo = match[2];
 
-            // Send AJAX request to Python script
+            // Construct the full URL for the AJAX request
+            var fullUrl = baseUrl + owner + "/" + repo + "/contributors";
+
+            // Send AJAX request to GitHub API
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === XMLHttpRequest.DONE) {
                     if (xhr.status === 200) {
-                        document.getElementById("results").innerHTML = xhr.responseText;
+                        // Parse response JSON and display top contributors
+                        var contributors = JSON.parse(xhr.responseText);
+                        showTopContributors(repoUrl, contributors);
                     } else {
                         alert("Error: " + xhr.statusText);
                     }
                 }
             };
-            xhr.open("GET", "https://kevin-quigley.github.io/RepoTopTen/" + encodeURIComponent(repoUrl), true);
+            xhr.open("GET", fullUrl, true);
             xhr.send();
-        }
-    </script>
+        });
+    }
+
+    function showTopContributors(repoUrl, contributors) {
+        // Display top contributors for the repository
+        var resultsDiv = document.getElementById("results");
+        resultsDiv.innerHTML += "<h2>" + repoUrl + "</h2>";
+        resultsDiv.innerHTML += "<ol>";
+        contributors.slice(0, 10).forEach(function(contributor, index) {
+            resultsDiv.innerHTML += "<li>" + contributor.login + ": " + contributor.contributions + " contributions</li>";
+        });
+        resultsDiv.innerHTML += "</ol>";
+    }
+</script>
 </body>
 </html>
+
+
+
