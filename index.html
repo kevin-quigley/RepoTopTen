@@ -80,6 +80,8 @@
                 alert("Please enter GitHub repository URLs.");
                 return;
             }
+            // Clear previous results
+            document.getElementById("results").innerHTML = "";
             // Split repository URLs by comma and trim whitespace from each URL
             var repoUrlList = repoUrls.split(",").map(url => url.trim());
             // Construct the base URL for the AJAX request
@@ -130,3 +132,4 @@
     </script>
 </body>
 </html>
+
