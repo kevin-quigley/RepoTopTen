@@ -16,7 +16,7 @@
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
-            text-align: center; /* Center align content */
+            text-align: center;
         }
 
         h1 {
@@ -32,7 +32,7 @@
         }
 
         input[type="text"] {
-            width: calc(100% - 100px); /* Adjust input width */
+            width: calc(100% - 100px);
             padding: 10px;
             margin-bottom: 10px;
             border: 1px solid #ccc;
@@ -55,18 +55,18 @@
 
         #results {
             margin-top: 20px;
-            text-align: left; /* Align text to left */
+            text-align: left;
         }
 
         ol {
             list-style: none;
             padding: 0;
-            margin: 10px 0; /* Adjust margin between repositories */
+            margin: 10px 0;
         }
 
         ol li {
             margin-bottom: 10px;
-            font-size: 16px; /* Decrease font size */
+            font-size: 16px;
         }
 
         ol li a {
@@ -75,7 +75,7 @@
         }
 
         .repo-url {
-            margin-top: 10px; /* Add space between repository URLs */
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -140,7 +140,7 @@
             resultsDiv.innerHTML += "<h2>" + repoUrl + "</h2>";
             resultsDiv.innerHTML += "<ol>";
             contributors.slice(0, 10).forEach(function(contributor, index) {
-                resultsDiv.innerHTML += "<li>" + (index + 1) + ". " + contributor.login + ": " + contributor.contributions + " contributions</li>";
+                resultsDiv.innerHTML += "<li>" + (index + 1) + ". <a href='" + repoUrl + "' target='_blank'>" + contributor.login + "</a>: " + contributor.contributions + " contributions</li>";
             });
             resultsDiv.innerHTML += "</ol>";
         }
@@ -149,8 +149,3 @@
         document.getElementById("repoInput").addEventListener("keypress", function(event) {
             if (event.key === "Enter") {
                 fetchTopContributors();
-            }
-        });
-    </script>
-</body>
-</html>
