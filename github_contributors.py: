@@ -1,0 +1,18 @@
+import requests
+from flask import Flask, request
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return 'GitHub Top Contributors'
+
+@app.route('/get_top_contributors')
+def get_top_contributors():
+    repo_url = request.args.get('repo_url')
+    # Process repo_url and fetch top contributors using requests module
+    # Replace this with your actual logic
+    return 'Top 10 contributors for ' + repo_url
+
+if __name__ == '__main__':
+    app.run()
