@@ -116,19 +116,28 @@
             });
         }
         function showTopContributors(repoUrl, contributors) {
-            // Display top contributors for the repository
-            var resultsDiv = document.getElementById("results");
-            var repoLink = document.createElement("a");
-            repoLink.href = repoUrl;
-            repoLink.target = "_blank"; // Open link in new window
-            repoLink.textContent = repoUrl;
-            resultsDiv.appendChild(repoLink);
-            resultsDiv.innerHTML += "<ol>";
-            contributors.slice(0, 10).forEach(function(contributor, index) {
-                resultsDiv.innerHTML += "<li>" + (index + 1) + ". <a href='https://github.com/" + contributor.login + "' target='_blank'>" + contributor.login + "</a>: " + contributor.contributions + " contributions</li>";
-            });
-            resultsDiv.innerHTML += "</ol>";
-        }
+    // Display top contributors for the repository
+    var resultsDiv = document.getElementById("results");
+    var repoLink = document.createElement("a");
+    repoLink.href = repoUrl;
+    repoLink.target = "_blank"; // Open link in new window
+    repoLink.textContent = repoUrl;
+    resultsDiv.appendChild(repoLink);
+    
+    var ol = document.createElement("ol"); // Create ordered list
+    contributors.slice(0, 10).forEach(function(contributor, index) {
+        var li = document.createElement("li"); // Create list item
+        var contributorLink = document.createElement("a");
+        contributorLink.href = 'https://github.com/' + contributor.login;
+        contributorLink.target = '_blank';
+        contributorLink.textContent = contributor.login;
+        li.textContent = (index + 1) + ". ";
+        li.appendChild(contributorLink);
+        li.innerHTML += ": " + contributor.contributions + " contributions";
+        ol.appendChild(li); // Append list item to ordered list
+    });
+    resultsDiv.appendChild(ol); // Append ordered list to resultsDiv
+}
     </script>
 </body>
 </html>
